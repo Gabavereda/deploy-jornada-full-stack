@@ -1,38 +1,45 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import { Link, useParams } from "react-router-dom";
 import { songsArray } from "../assets/database/songs";
 import { artistArray } from "../assets/database/artists";
 
 const Song = () => {
   const { id } = useParams();
-  // console.log(id);
 
-  const { image, name, duration, artist, audio } = songsArray.filter(
-    (currentSongObj) => currentSongObj._id === id
-  )[0];
-  // console.log(songObj);
-
-  const artistObj = artistArray.filter(
-    (currentArtistObj) => currentArtistObj.name === artist
-  )[0];
-  // console.log(artistObj);
-
-  const songsArrayFromArtist = songsArray.filter(
-    (currentSongObj) => currentSongObj.artist === artist
+  // 1️⃣ Buscar música pelo ID CORRETO
+  const songObj = songsArray.find(
+    (song) => song.id === Number(id)
   );
-  // console.log(songsArrayFromArtist);
 
+  // 2️⃣ Validar música
+  if (!songObj) {
+    return <p>Música não encontrada</p>;
+  }
+
+  const { image, name, duration, artist, audio } = songObj;
+
+  // 3️⃣ Buscar artista
+  const artistObj = artistArray.find(
+    (artistObj) => artistObj.name === artist
+  );
+
+  // 4️⃣ Buscar músicas do mesmo artista
+  const songsFromArtist = songsArray.filter(
+    (song) => song.artist === artist
+  );
+
+  // 5️⃣ Gerar músicas aleatórias (seguro)
   const randomIndex = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
+    Math.random() * songsFromArtist.length
   );
 
   const randomIndex2 = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
+    Math.random() * songsFromArtist.length
   );
 
-  const randomIdFromArtist = songsArrayFromArtist[randomIndex]._id;
-  const randomId2FromArtist = songsArrayFromArtist[randomIndex2]._id;
+  const randomIdFromArtist = songsFromArtist[randomIndex]?.id;
+  const randomId2FromArtist = songsFromArtist[randomIndex2]?.id;
 
   return (
     <div className="song">
@@ -43,14 +50,14 @@ const Song = () => {
       </div>
 
       <div className="song__bar">
-        <Link to={`/artist/${artistObj._id}`} className="song__artist-image">
+        {artistObj && (
           <img
             width={75}
             height={75}
             src={artistObj.image}
             alt={`Imagem do Artista ${artist}`}
           />
-        </Link>
+        )}
 
         <Player
           duration={duration}

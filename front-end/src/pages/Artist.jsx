@@ -5,29 +5,38 @@ import { Link, useParams } from "react-router-dom";
 import SongList from "../components/SongList";
 import { artistArray } from "../assets/database/artists";
 import { songsArray } from "../assets/database/songs";
-
 const Artist = () => {
   const { id } = useParams();
-  // console.log(useParams());
 
-  const { name, banner } = artistArray.filter(
-    (currentArtistObj) => currentArtistObj._id === id
-  )[0];
+  // 1️⃣ Buscar artista
+  const artistObj = artistArray.find(
+    (currentArtistObj) => currentArtistObj.id === Number(id)
+  );
 
+  // 2️⃣ Validar artista
+  if (!artistObj) {
+    return <p>Artista não encontrado</p>;
+  }
+
+  const { name, banner } = artistObj;
+
+  // 3️⃣ Buscar músicas do artista
   const songsArrayFromArtist = songsArray.filter(
     (currentSongObj) => currentSongObj.artist === name
   );
 
+  // 4️⃣ Se não houver músicas
+  if (songsArrayFromArtist.length === 0) {
+    return <p>Este artista ainda não possui músicas</p>;
+  }
+
+  // 5️⃣ Gerar ID aleatório corretamente
   const randomIndex = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
+    Math.random() * songsArrayFromArtist.length
   );
-  const randomIdFromArtist = songsArrayFromArtist[randomIndex]._id;
 
-  // console.log(randomIdFromArtist);
-  // console.log(Math.floor(Math.random() * (songsArrayFromArtist.length - 1)));
-  // console.log("Tamanho do Array:" + songsArrayFromArtist.length);
-
-  // console.log(songsArrayFromArtist);
+  const randomIdFromArtist =
+    songsArrayFromArtist[randomIndex]?.id;
 
   return (
     <div className="artist">
@@ -42,16 +51,17 @@ const Artist = () => {
 
       <div className="artist__body">
         <h2>Populares</h2>
-
         <SongList songsArray={songsArrayFromArtist} />
       </div>
 
-      <Link to={`/song/${randomIdFromArtist}`}>
-        <FontAwesomeIcon
-          className="single-item__icon single-item__icon--artist"
-          icon={faCirclePlay}
-        />
-      </Link>
+      {randomIdFromArtist && (
+        <Link to={`/song/${randomIdFromArtist}`}>
+          <FontAwesomeIcon
+            className="single-item__icon single-item__icon--artist"
+            icon={faCirclePlay}
+          />
+        </Link>
+      )}
     </div>
   );
 };
