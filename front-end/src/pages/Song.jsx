@@ -28,18 +28,17 @@ const Song = () => {
   const songsFromArtist = songsArray.filter(
     (song) => song.artist === artist
   );
-  // console.log(songsArrayFromArtist);
 
+  // 5️⃣ Gerar índice aleatório seguro para o próximo
   const randomIndex = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
+    Math.random() * songsFromArtist.length
   );
-
   const randomIndex2 = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
+    Math.random() * songsFromArtist.length
   );
 
-  const randomIdFromArtist = songsArrayFromArtist[randomIndex]._id;
-  const randomId2FromArtist = songsArrayFromArtist[randomIndex2]._id;
+  const randomIdFromArtist = songsFromArtist[randomIndex]?.id;
+  const randomId2FromArtist = songsFromArtist[randomIndex2]?.id;
 
   return (
     <div className="song">
@@ -61,8 +60,8 @@ const Song = () => {
 
         <Player
           duration={duration}
-          randomId={randomId}
-          randomId2={randomId2}
+          randomIdFromArtist={randomIdFromArtist}
+          randomId2FromArtist={randomId2FromArtist}
           audio={audio}
         />
 
