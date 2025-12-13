@@ -1715,8 +1715,7 @@ export const songsArray = [
         name: "Camomila",
         duration: "06:01",
         artist: "Manda Busca",
-        audio: "/songs/02_Camomila.mp3"
-        ,
+        audio: "/songs/02_Camomila.mp3",
         id: 200,
     },
 ];
