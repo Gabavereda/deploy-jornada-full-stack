@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const SongItem = ({ id, image, name, duration, index }) => {
+  const imageUrl = image.startsWith("http") ? image : `/songs/${image}`;
+
   return (
     <Link to={`/song/${id}`} className="song-item">
       <div className="song-item__number-album">
@@ -9,7 +11,7 @@ const SongItem = ({ id, image, name, duration, index }) => {
 
         <div className="song-item__album">
           <img
-            src={image}
+            src={imageUrl}
             alt={`Imagem da Música ${name}`}
             className="song-item__image"
           />

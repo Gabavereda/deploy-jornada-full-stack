@@ -1,44 +1,67 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import { songsArray } from "../assets/database/songs";
-import { artistArray } from "../assets/database/artists";
+import { getSongs,getArtists } from "/api/api.js";
+
 
 const Song = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // id do Mongo (_id)
+  const [songObj, setSongObj] = useState(null);
+  const [songsFromArtist, setSongsFromArtist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // 1️⃣ Buscar música pelo ID CORRETO
-  const songObj = songsArray.find(
-    (song) => song.id === Number(id)
-  );
+  useEffect(() => {
+    async function loadSong() {
+      try {
+        const allSongs = await getSongs();
 
-  // 2️⃣ Validar música
-  if (!songObj) {
-    return <p>Música não encontrada</p>;
-  }
+        // 1️⃣ Música atual
+        const currentSong = allSongs.find(
+          (song) => song._id === id
+        );
+
+        if (!currentSong) return;
+
+        setSongObj(currentSong);
+
+        // 2️⃣ Músicas do mesmo artista
+        const artistSongs = allSongs.filter(
+          (song) => song.artist === currentSong.artist
+        );
+
+        setSongsFromArtist(artistSongs);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadSong();
+  }, [id]);
+
+  if (loading) return <p>Carregando...</p>;
+  if (!songObj) return <p>Música não encontrada</p>;
 
   const { image, name, duration, artist, audio } = songObj;
 
-  // 3️⃣ Buscar artista
-  const artistObj = artistArray.find(
+  // 3️⃣ Buscar artista (continua local)
+  const artistObj = getArtists(
     (artistObj) => artistObj.name === artist
   );
 
-  // 4️⃣ Buscar músicas do mesmo artista
-  const songsFromArtist = songsArray.filter(
-    (song) => song.artist === artist
-  );
-
-  // 5️⃣ Gerar índice aleatório seguro para o próximo
-  const randomIndex = Math.floor(
+  // 4️⃣ IDs aleatórios seguros
+  const randomIndex1 = Math.floor(
     Math.random() * songsFromArtist.length
   );
   const randomIndex2 = Math.floor(
     Math.random() * songsFromArtist.length
   );
 
-  const randomIdFromArtist = songsFromArtist[randomIndex]?.id;
-  const randomId2FromArtist = songsFromArtist[randomIndex2]?.id;
+  const randomIdFromArtist =
+    songsFromArtist[randomIndex1]?._id;
+  const randomId2FromArtist =
+    songsFromArtist[randomIndex2]?._id;
 
   return (
     <div className="song">
@@ -53,7 +76,7 @@ const Song = () => {
           <img
             width={75}
             height={75}
-            src={artistObj.image}
+            src={image}
             alt={`Imagem do Artista ${artist}`}
           />
         )}

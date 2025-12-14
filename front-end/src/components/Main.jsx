@@ -1,32 +1,52 @@
-import React from "react";
 import ItemList from "./ItemList";
-import { artistArray } from "../assets/database/artists";
-import { songsArray } from "../assets/database/songs";
 
-const Main = ({ type }) => {
+const Main = ({ type, artists = [], songs = [] }) => {
   return (
     <div className="main">
-      {/* Artistas */}
-      {(type === "artists" || type === undefined) && (
-        <ItemList
-          title="Artistas"
-          items={11}
-          itemsArray={artistArray}
-          path="/artists"
-          idPath="/artist"
-          idKey="id"   // ✅ IMPORTANTE
-        />
+      {/* HOME */}
+      {!type && (
+        <>
+          <ItemList
+            title="Artistas"
+            items={6}
+            itemsArray={artists}  /* Usando artistas da API */
+            path="/artists"
+            idPath="/artist"
+            idKey="_id"
+          />
+
+          <ItemList
+            title="Músicas"
+            items={6}
+            itemsArray={songs}  /* Usando músicas da API */
+            path="/songs"
+            idPath="/song"
+            idKey="_id"
+          />
+        </>
       )}
 
-      {/* Músicas */}
-      {(type === "songs" || type === undefined) && (
+      {/* LISTA DE MÚSICAS */}
+      {type === "songs" && (
         <ItemList
           title="Músicas"
           items={20}
-          itemsArray={songsArray}
+          itemsArray={songs}  /* Usando músicas da API */
           path="/songs"
           idPath="/song"
-          idKey="id"   // ✅ IMPORTANTE
+          idKey="_id"
+        />
+      )}
+
+      {/* LISTA DE ARTISTAS */}
+      {type === "artists" && (
+        <ItemList
+          title="Artistas"
+          items={20}
+          itemsArray={artists}  /* Usando artistas da API */
+          path="/artists"
+          idPath="/artist"
+          idKey="_id"
         />
       )}
     </div>

@@ -10,13 +10,14 @@ const SongList = ({ songsArray }) => {
         .slice(0, items)
         .map((song, index) => (
           <SongItem
-            key={song.id}
-            id={song.id}
+            key={song._id}
+            id={song._id}
             index={index}
             name={song.name}
             image={song.image}
             duration={song.duration}
           />
+
         ))}
 
       {items < songsArray.length && (

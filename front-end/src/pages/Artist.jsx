@@ -1,67 +1,76 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import SongList from "../components/SongList";
-import { artistArray } from "../assets/database/artists";
-import { songsArray } from "../assets/database/songs";
+import { getSongs, getArtists } from "/api/api";
+
 const Artist = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // _id do artista
+  const [songs, setSongs] = useState([]);
+  const [artistName, setArtistName] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // 1️⃣ Buscar artista
-  const artistObj = artistArray.find(
-    (currentArtistObj) => currentArtistObj.id === Number(id)
-  );
+  useEffect(() => {
+    async function loadArtistSongs() {
+      try {
+        const [allSongs, allArtists] = await Promise.all([
+          getSongs(),
+          getArtists(),
+        ]);
 
-  // 2️⃣ Validar artista
-  if (!artistObj) {
-    return <p>Artista não encontrado</p>;
-  }
+        const currentArtist = allArtists.find(a => a._id === id);
+        if (!currentArtist) {
+          setSongs([]);
+          setArtistName("Artista não encontrado");
+          return;
+        }
 
-  const { name, banner } = artistObj;
+        setArtistName(currentArtist.name);
 
-  // 3️⃣ Buscar músicas do artista
-  const songsArrayFromArtist = songsArray.filter(
-    (currentSongObj) => currentSongObj.artist === name
-  );
+        const artistSongs = allSongs.filter(
+          song => song.artist === currentArtist.name
+        );
 
-  // 4️⃣ Se não houver músicas
-  if (songsArrayFromArtist.length === 0) {
-    return <p>Este artista ainda não possui músicas</p>;
-  }
+        setSongs(artistSongs);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  // 5️⃣ Gerar ID aleatório corretamente
-  const randomIndex = Math.floor(
-    Math.random() * songsArrayFromArtist.length
-  );
+    loadArtistSongs();
+  }, [id]);
 
-  const randomIdFromArtist =
-    songsArrayFromArtist[randomIndex]?.id;
+  if (loading) return <p>Carregando...</p>;
+  if (songs.length === 0) return <p>Este artista ainda não possui músicas</p>;
+
+  const randomIndex = Math.floor(Math.random() * songs.length);
+  const randomIdFromArtist = songs[randomIndex]._id;
 
   return (
     <div className="artist">
       <div
         className="artist__header"
         style={{
-          backgroundImage: `linear-gradient(to bottom, var(--_shade), var(--_shade)),url(${banner})`,
+          backgroundImage: `linear-gradient(to bottom, var(--_shade), var(--_shade)), url(${songs[0].image})`,
         }}
       >
-        <h2 className="artist__title">{name}</h2>
+        <h2 className="artist__title">{artistName}</h2>
       </div>
 
       <div className="artist__body">
         <h2>Populares</h2>
-        <SongList songsArray={songsArrayFromArtist} />
+        <SongList songsArray={songs} />
       </div>
 
-      {randomIdFromArtist && (
-        <Link to={`/song/${randomIdFromArtist}`}>
-          <FontAwesomeIcon
-            className="single-item__icon single-item__icon--artist"
-            icon={faCirclePlay}
-          />
-        </Link>
-      )}
+      <Link to={`/song/${randomIdFromArtist}`}>
+        <FontAwesomeIcon
+          className="single-item__icon single-item__icon--artist"
+          icon={faCirclePlay}
+        />
+      </Link>
     </div>
   );
 };

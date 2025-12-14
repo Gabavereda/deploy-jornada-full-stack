@@ -1,14 +1,20 @@
-// Fetch ou Axios
-import axios from "axios";
+export async function getSongs() {
+  const response = await fetch("http://localhost:3000/api/songs");
 
-// const { NODE_ENV } = process.env;
- const URL = "http://localhost:3001/api";
-// const URL = "https://deploy-jornada-full-stack.onrender.com/api";
+  if (!response.ok) {
+    throw new Error("Erro ao buscar músicas");
+  }
 
-const responseArtists = await axios.get(`${URL}/artists`);
-const responseSongs = await axios.get(`${URL}/songs`);
+  return response.json();
+}
 
-export const artistArray = responseArtists.data;
-export const songsArray = responseSongs.data;
 
-// console.log(responseArtists.data);
+export async function getArtists() {
+  const response = await fetch("http://localhost:3000/api/artists");
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar artistas");
+  }
+
+  return response.json();
+}

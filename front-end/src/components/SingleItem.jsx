@@ -2,8 +2,12 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+
 const SingleItem = ({ id, name, image, artist, idPath }) => {
   if (!id) return null;
+
+  // Monta o caminho da imagem considerando que está no public
+  const imageUrl = image.startsWith("http") ? image : `/images/${image}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
@@ -11,7 +15,7 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
         <div className="single-item__div-image">
           <img
             className="single-item__image"
-            src={image}
+            src={imageUrl}
             alt={`Imagem ${name}`}
           />
         </div>
@@ -27,11 +31,10 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
           <p className="single-item__title">{name}</p>
         </div>
 
-        <p className="single-item__type">{artist ?? "Artista"}</p>
+        {artist && <p className="single-item__type">{artist}</p>}
       </div>
     </Link>
   );
 };
-
 
 export default SingleItem;
