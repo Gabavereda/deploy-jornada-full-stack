@@ -1,37 +1,42 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import SongList from "../components/SongList";
-import { getSongs, getArtists } from "/api/api.js";
+import { getSongs,getArtists } from "/api/api.js";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
 
 const Song = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // id do Mongo (_id)
   const [songObj, setSongObj] = useState(null);
   const [songsFromArtist, setSongsFromArtist] = useState([]);
-  const [artistObj, setArtistObj] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadSong() {
       try {
         const allSongs = await getSongs();
-        const allArtists = await getArtists();
-        const currentSong = allSongs.find(song => song._id === id);
+
+        // 1️⃣ Música atual
+        const currentSong = allSongs.find(
+          (song) => song._id === id
+        );
+
         if (!currentSong) return;
 
         setSongObj(currentSong);
-        const artistSongs = allSongs.filter(song => song.artist === currentSong.artist);
+
+        // 2️⃣ Músicas do mesmo artista
+        const artistSongs = allSongs.filter(
+          (song) => song.artist === currentSong.artist
+        );
+
         setSongsFromArtist(artistSongs);
-        const artistFound = allArtists.find(a => a.name === currentSong.artist);
-        setArtistObj(artistFound || null);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
+
     loadSong();
   }, [id]);
 
@@ -39,27 +44,55 @@ const Song = () => {
   if (!songObj) return <p>Música não encontrada</p>;
 
   const { image, name, duration, artist, audio } = songObj;
-  const randomIdFromArtist = songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
-  const randomId2FromArtist = songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
+
+  // 3️⃣ Buscar artista (continua local)
+  const artistObj = getArtists(
+    (artistObj) => artistObj.name === artist
+  );
+
+  // 4️⃣ IDs aleatórios seguros
+  const randomIndex1 = Math.floor(
+    Math.random() * songsFromArtist.length
+  );
+  const randomIndex2 = Math.floor(
+    Math.random() * songsFromArtist.length
+  );
+
+  const randomIdFromArtist =
+    songsFromArtist[randomIndex1]?._id;
+  const randomId2FromArtist =
+    songsFromArtist[randomIndex2]?._id;
 
   return (
     <div className="song">
       <div className="song__container">
         <div className="song__image-container">
-          <img src={image ? `${API_URL}${image}` : ""} alt={`Imagem da música ${name}`} />
+          <img src={image} alt={`Imagem da música ${name}`} />
         </div>
       </div>
 
       <div className="song__bar">
-        {artistObj && <img width={75} height={75} src={artistObj.image ? `${API_URL}${artistObj.image}` : ""} alt={`Imagem do Artista ${artist}`} />}
-        <Player duration={duration} randomIdFromArtist={randomIdFromArtist} randomId2FromArtist={randomId2FromArtist} audio={audio} />
+        {artistObj && (
+          <img
+            width={75}
+            height={75}
+            src={image}
+            alt={`Imagem do Artista ${artist}`}
+          />
+        )}
+
+        <Player
+          duration={duration}
+          randomIdFromArtist={randomIdFromArtist}
+          randomId2FromArtist={randomId2FromArtist}
+          audio={audio}
+        />
+
         <div>
           <p className="song__name">{name}</p>
           <p>{artist}</p>
         </div>
       </div>
-
-      <SongList songsArray={songsFromArtist} />
     </div>
   );
 };

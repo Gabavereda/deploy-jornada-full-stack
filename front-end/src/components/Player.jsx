@@ -1,73 +1,127 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlay, faCirclePause, faBackwardStep, faForwardStep } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePlay,
+  faCirclePause,
+  faBackwardStep,
+  faForwardStep,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-const formatTime = (seconds = 0) => {
-  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
+const formatTime = (timeInSeconds) => {
+  const minutes = Math.floor(timeInSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const seconds = Math.floor(timeInSeconds % 60)
+    .toString()
+    .padStart(2, "0");
+
+  return `${minutes}:${seconds}`;
 };
 
-const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) => {
-  const API_URL = import.meta.env.VITE_API_URL || "";
-  const audioRef = useRef(null);
-  const progressRef = useRef(null);
+const timeInSeconds = (timeString) => {
+  const [minutes, seconds] = timeString.split(":").map(Number);
+  return minutes * 60 + seconds;
+};
+
+const Player = ({
+  duration,
+  randomIdFromArtist,
+  randomId2FromArtist,
+  audio,
+}) => {
+  const audioPlayer = useRef(null);
+  const progressBar = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState("00:00");
+  const [currentTime, setCurrentTime] = useState(formatTime(0));
 
-  const durationInSeconds = duration?.includes(":")
-    ? Number(duration.split(":")[0]) * 60 + Number(duration.split(":")[1])
-    : 0;
+  const durationInSeconds = timeInSeconds(duration);
 
-  const playPause = async () => {
-    if (!audioRef.current || !audio) return;
-    try {
-      if (isPlaying) audioRef.current.pause();
-      else await audioRef.current.play();
-      setIsPlaying(prev => !prev);
-    } catch (err) {
-      console.error("Erro ao tocar áudio:", err);
+  const playPause = () => {
+    if (!audioPlayer.current) return;
+
+    if (isPlaying) {
+      audioPlayer.current.pause();
+    } else {
+      audioPlayer.current.play();
     }
+
+    setIsPlaying((prev) => !prev);
   };
 
+  // ⏱ Atualiza tempo e barra
   useEffect(() => {
-    if (!audioRef.current) return;
-    const interval = setInterval(() => {
+    if (!audioPlayer.current || !progressBar.current) return;
+
+    const intervalId = setInterval(() => {
       if (!isPlaying) return;
-      const current = audioRef.current.currentTime;
+
+      const current = audioPlayer.current.currentTime;
+
       setCurrentTime(formatTime(current));
-      if (progressRef.current && durationInSeconds) {
-        progressRef.current.style.setProperty("--_progress", `${(current / durationInSeconds) * 100}%`);
-      }
-    }, 500);
-    return () => clearInterval(interval);
+
+      progressBar.current.style.setProperty(
+        "--_progress",
+        `${(current / durationInSeconds) * 100}%`
+      );
+    }, 1000);
+
+    return () => clearInterval(intervalId);
   }, [isPlaying, durationInSeconds]);
 
+  // 🔁 Resetar player ao trocar de música
   useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
+    if (!audioPlayer.current) return;
+
+    audioPlayer.current.pause();
+    audioPlayer.current.currentTime = 0;
     setIsPlaying(false);
-    setCurrentTime("00:00");
+    setCurrentTime(formatTime(0));
   }, [audio]);
 
   return (
     <div className="player">
       <div className="player__controllers">
-        {randomIdFromArtist && <Link to={`/song/${randomIdFromArtist}`}><FontAwesomeIcon icon={faBackwardStep} /></Link>}
-        <FontAwesomeIcon icon={isPlaying ? faCirclePause : faCirclePlay} onClick={playPause} />
-        {randomId2FromArtist && <Link to={`/song/${randomId2FromArtist}`}><FontAwesomeIcon icon={faForwardStep} /></Link>}
+        {randomIdFromArtist && (
+          <Link to={`/song/${randomIdFromArtist}`}>
+            <FontAwesomeIcon
+              className="player__icon"
+              icon={faBackwardStep}
+            />
+          </Link>
+        )}
+
+        <FontAwesomeIcon
+          className="player__icon player__icon--play"
+          icon={isPlaying ? faCirclePause : faCirclePlay}
+          onClick={playPause}
+        />
+
+        {randomId2FromArtist && (
+          <Link to={`/song/${randomId2FromArtist}`}>
+            <FontAwesomeIcon
+              className="player__icon"
+              icon={faForwardStep}
+            />
+          </Link>
+        )}
       </div>
 
       <div className="player__progress">
         <p>{currentTime}</p>
-        <div className="player__bar"><div ref={progressRef} className="player__bar-progress" /></div>
+
+        <div className="player__bar">
+          <div
+            ref={progressBar}
+            className="player__bar-progress"
+          />
+        </div>
+
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioRef} src={audio ? `${API_URL}${audio}` : ""} preload="metadata" />
+      <audio ref={audioPlayer} src={audio} />
     </div>
   );
 };
