@@ -1,10 +1,7 @@
 import { Router } from "express";
 import Artist from "../models/Artists.js";
 
-
 const router = Router();
-
-
 
 router.get("/", async (req, res) => {
   try {
@@ -15,8 +12,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-// POST criar artista
 router.post("/", async (req, res) => {
   try {
     const artist = await Artist.create(req.body);
@@ -25,6 +20,5 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Erro ao criar artista" });
   }
 });
-
 
 export default router;

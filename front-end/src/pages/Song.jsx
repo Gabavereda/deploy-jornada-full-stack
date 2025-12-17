@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
+import SongList from "../components/SongList";
 import { getSongs, getArtists } from "/api/api.js";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -18,10 +19,7 @@ const Song = () => {
         const allSongs = await getSongs();
         const allArtists = await getArtists();
 
-        const currentSong = allSongs.find(
-          (song) => song._id === id
-        );
-
+        const currentSong = allSongs.find((song) => song._id === id);
         if (!currentSong) return;
 
         setSongObj(currentSong);
@@ -49,10 +47,8 @@ const Song = () => {
   if (!songObj) return <p>Música não encontrada</p>;
 
   const { image, name, duration, artist, audio } = songObj;
-
   const randomIdFromArtist =
     songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
-
   const randomId2FromArtist =
     songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
 
@@ -60,10 +56,7 @@ const Song = () => {
     <div className="song">
       <div className="song__container">
         <div className="song__image-container">
-          <img
-            src={`${API_URL}${image}`}
-            alt={`Imagem da música ${name}`}
-          />
+          <img src={`${API_URL}${image}`} alt={`Imagem da música ${name}`} />
         </div>
       </div>
 
@@ -81,7 +74,7 @@ const Song = () => {
           duration={duration}
           randomIdFromArtist={randomIdFromArtist}
           randomId2FromArtist={randomId2FromArtist}
-          audio={`${API_URL}${audio}`}
+          audio={audio}
         />
 
         <div>
@@ -89,6 +82,8 @@ const Song = () => {
           <p>{artist}</p>
         </div>
       </div>
+
+      <SongList songsArray={songsFromArtist} />
     </div>
   );
 };

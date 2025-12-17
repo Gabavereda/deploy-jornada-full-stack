@@ -15,46 +15,30 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-/* ===========================
-   🎧 API
-=========================== */
+// Rotas da API
 app.use("/api/songs", songsRoutes);
 app.use("/api/artists", artistsRoutes);
 
-/* ===========================
-   📂 ARQUIVOS ESTÁTICOS (🔥 ESSENCIAL)
-=========================== */
-app.use(
-  "/images",
-  express.static(path.join(__dirname, "public", "images"))
-);
+// Arquivos estáticos (imagens e músicas)
+app.use("/images", express.static(path.join(__dirname, "public", "images")));
+app.use("/songs", express.static(path.join(__dirname, "public", "songs")));
 
-app.use(
-  "/songs",
-  express.static(path.join(__dirname, "public", "songs"))
-);
-
-/* ===========================
-   🌐 FRONT (Vite build)
-=========================== */
+// Build do React (Vite)
 app.use(express.static(path.join(__dirname, "public", "dist")));
 
-// React Router fallback
+// Fallback React Router
 app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "public", "dist", "index.html")
-  );
+  res.sendFile(path.join(__dirname, "public", "dist", "index.html"));
 });
 
-/* ===========================
-   🧠 MongoDB
-=========================== */
+// Conexão MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB conectado"))
-  .catch((err) => console.error("Erro MongoDB:", err));
+  .then(() => console.log("✅ MongoDB conectado"))
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
 
 export default app;

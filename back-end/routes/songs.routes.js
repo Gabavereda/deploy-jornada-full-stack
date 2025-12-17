@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Song from "../models/song.js";
+import Song from "../models/Song.js";
 
 const router = Router();
 
@@ -12,8 +12,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-// POST criar música
 router.post("/", async (req, res) => {
   try {
     const song = await Song.create(req.body);

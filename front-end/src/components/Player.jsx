@@ -14,12 +14,8 @@ const formatTime = (seconds = 0) => {
   return `${m}:${s}`;
 };
 
-const Player = ({
-  duration,
-  randomIdFromArtist,
-  randomId2FromArtist,
-  audio,
-}) => {
+const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) => {
+  const API_URL = import.meta.env.VITE_API_URL || "";
   const audioRef = useRef(null);
   const progressRef = useRef(null);
 
@@ -28,8 +24,7 @@ const Player = ({
 
   const durationInSeconds =
     duration?.includes(":")
-      ? Number(duration.split(":")[0]) * 60 +
-        Number(duration.split(":")[1])
+      ? Number(duration.split(":")[0]) * 60 + Number(duration.split(":")[1])
       : 0;
 
   const playPause = async () => {
@@ -98,15 +93,13 @@ const Player = ({
 
       <div className="player__progress">
         <p>{currentTime}</p>
-
         <div className="player__bar">
           <div ref={progressRef} className="player__bar-progress" />
         </div>
-
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioRef} src={audio || ""} preload="metadata" />
+      <audio ref={audioRef} src={`${API_URL}${audio || ""}`} preload="metadata" />
     </div>
   );
 };
