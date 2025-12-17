@@ -25,6 +25,19 @@ app.use("/api/songs", songsRoutes);
 app.use("/api/artists", artistsRoutes);
 
 /* ===========================
+   📂 ARQUIVOS ESTÁTICOS (🔥 ESSENCIAL)
+=========================== */
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "public", "images"))
+);
+
+app.use(
+  "/songs",
+  express.static(path.join(__dirname, "public", "songs"))
+);
+
+/* ===========================
    🌐 FRONT (Vite build)
 =========================== */
 app.use(express.static(path.join(__dirname, "public", "dist")));
