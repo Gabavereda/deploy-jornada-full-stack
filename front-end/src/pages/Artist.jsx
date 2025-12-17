@@ -5,8 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import SongList from "../components/SongList";
 import { getSongs, getArtists } from "/api/api";
 
-
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 const Artist = () => {
   const { id } = useParams();
@@ -41,13 +40,10 @@ const Artist = () => {
 
         setSongs(artistSongs);
 
-        // 👉 imagem do banner (prioriza artista, senão usa da música)
         if (currentArtist.image) {
-          setBannerImage(`${API_URL}/images/${currentArtist.image}`);
-
+          setBannerImage(`${API_URL}${currentArtist.image}`);
         } else if (artistSongs.length > 0) {
-          setBannerImage(`${API_URL}/images/${artistSongs[0].image}`);
-
+          setBannerImage(`${API_URL}${artistSongs[0].image}`);
         }
       } catch (error) {
         console.error(error);
@@ -87,24 +83,6 @@ const Artist = () => {
       <div className="artist__body">
         <h2>Populares</h2>
         <SongList songsArray={songs} />
-      </div>
-
-      <div className="artist__body">
-        <h2>Sobre o Artista</h2>
-        <p>
-          Manda Busca é uma banda que carrega em seu nome uma
-          referência à gíria dos soltadores de pipa...
-        </p>
-
-        <p>
-          A postura do Manda Busca reflete o espírito de sua
-          região de origem, com filosofia DIY (Do It Yourself)...
-        </p>
-
-        <p>
-          O grupo Manda Busca, formado por Rafael Merino,
-          Guilherme Sebastião, Glauber Vereda e Gustavo Adami...
-        </p>
       </div>
 
       <Link to={`/song/${randomIdFromArtist}`}>

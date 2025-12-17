@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Player from "../components/Player";
 import { getSongs, getArtists } from "/api/api.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 const Song = () => {
   const { id } = useParams();

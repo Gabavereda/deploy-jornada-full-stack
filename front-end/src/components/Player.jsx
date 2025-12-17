@@ -29,11 +29,11 @@ const Player = ({
   const durationInSeconds =
     duration?.includes(":")
       ? Number(duration.split(":")[0]) * 60 +
-      Number(duration.split(":")[1])
+        Number(duration.split(":")[1])
       : 0;
 
   const playPause = async () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !audio) return;
 
     try {
       if (isPlaying) {
@@ -100,21 +100,13 @@ const Player = ({
         <p>{currentTime}</p>
 
         <div className="player__bar">
-          <div
-            ref={progressRef}
-            className="player__bar-progress"
-          />
+          <div ref={progressRef} className="player__bar-progress" />
         </div>
 
         <p>{duration}</p>
       </div>
 
-      <audio
-        ref={audioRef}
-        src={audio || ""}
-        preload="metadata"
-      />
-
+      <audio ref={audioRef} src={audio || ""} preload="metadata" />
     </div>
   );
 };

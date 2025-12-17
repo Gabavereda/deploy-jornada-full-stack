@@ -7,7 +7,7 @@ const Artists = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchArtists = async () => {
+    async function fetchArtists() {
       try {
         const data = await getArtists();
         setArtists(data);
@@ -16,7 +16,8 @@ const Artists = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }
+
     fetchArtists();
   }, []);
 

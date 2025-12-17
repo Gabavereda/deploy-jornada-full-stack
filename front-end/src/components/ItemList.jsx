@@ -22,7 +22,7 @@ const ItemList = ({ title, items, itemsArray, path, idPath, idKey }) => {
       <div className="item-list__container">
         {itemsArray
           .slice(0, finalItems)
-          .map((currObj, index) => {
+          .map((currObj) => {
             const id = currObj[idKey];
 
             if (!id) {
@@ -40,7 +40,7 @@ const ItemList = ({ title, items, itemsArray, path, idPath, idKey }) => {
                 name={currObj.name}
                 image={currObj.image}
                 artist={currObj.artist}
-                 idPath={idPath}
+                idPath={idPath}
               />
             );
           })}
