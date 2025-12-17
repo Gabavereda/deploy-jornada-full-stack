@@ -18,21 +18,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🎧 API
+/* ===========================
+   🎧 API
+=========================== */
 app.use("/api/songs", songsRoutes);
 app.use("/api/artists", artistsRoutes);
 
-// 📂 FRONT BUILD (React)
-app.use(express.static(path.join(__dirname, "public")));
+/* ===========================
+   🌐 FRONT (Vite build)
+=========================== */
+app.use(express.static(path.join(__dirname, "public", "dist")));
 
+// React Router fallback
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "public", "dist", "index.html")
+  );
 });
 
-// 🧠 MongoDB
+/* ===========================
+   🧠 MongoDB
+=========================== */
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectado"))
-  .catch(console.error);
+  .catch((err) => console.error("Erro MongoDB:", err));
 
 export default app;
