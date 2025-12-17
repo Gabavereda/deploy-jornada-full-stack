@@ -2,7 +2,6 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-
 const API_URL = import.meta.env.VITE_API_URL;
 
 const SingleItem = ({ id, name, image, artist, idPath }) => {
@@ -10,7 +9,7 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
 
   const imageUrl = image?.startsWith("http")
     ? image
-    : `${API_URL}${image}`;
+    : `${API_URL}/images/${image}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
@@ -41,5 +40,6 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
     </Link>
   );
 };
+
 
 export default SingleItem;

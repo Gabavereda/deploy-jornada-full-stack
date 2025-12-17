@@ -29,7 +29,7 @@ const Player = ({
   const durationInSeconds =
     duration?.includes(":")
       ? Number(duration.split(":")[0]) * 60 +
-        Number(duration.split(":")[1])
+      Number(duration.split(":")[1])
       : 0;
 
   const playPause = async () => {
@@ -109,7 +109,12 @@ const Player = ({
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioRef} src={audio} preload="metadata" />
+      <audio
+        ref={audioRef}
+        src={audio || ""}
+        preload="metadata"
+      />
+
     </div>
   );
 };
