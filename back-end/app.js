@@ -31,4 +31,18 @@ mongoose
   .then(() => console.log("MongoDB conectado"))
   .catch((err) => console.error(err));
 
+
+app.get("/", (req, res) => {
+  res.json({
+    status: "API rodando 🚀",
+    endpoints: {
+      artists: "/api/artists",
+      songs: "/api/songs",
+      images: "/images",
+      audios: "/songs",
+    },
+  });
+});
+
+
 export default app;
