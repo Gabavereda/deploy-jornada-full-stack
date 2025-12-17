@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function getSongs() {
-  const response = await fetch("http://localhost:3000/api/songs");
+  const response = await fetch(`${API_URL}/api/songs`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar músicas");
@@ -8,9 +10,8 @@ export async function getSongs() {
   return response.json();
 }
 
-
 export async function getArtists() {
-  const response = await fetch("http://localhost:3000/api/artists");
+  const response = await fetch(`${API_URL}/api/artists`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar artistas");
