@@ -99,7 +99,11 @@ const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) =>
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioRef} src={`${API_URL}${audio || ""}`} preload="metadata" />
+      <audio
+        ref={audioRef}
+        src={audio ? `${API_URL}${audio}` : ""}
+        preload="metadata"
+      />
     </div>
   );
 };

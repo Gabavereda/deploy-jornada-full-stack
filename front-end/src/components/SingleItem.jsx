@@ -11,7 +11,7 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
   const imageUrl = image
     ? image.startsWith("http")
       ? image
-      : `${API_URL}${image}`
+      : `${API_URL}${image}` // Concatenando API_URL
     : "";
 
   return (
@@ -24,15 +24,18 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
             alt={`Imagem ${name}`}
           />
         </div>
+
         <FontAwesomeIcon
           className="single-item__icon"
           icon={faCirclePlay}
         />
       </div>
+
       <div className="single-item__texts">
         <div className="single-item__2lines">
           <p className="single-item__title">{name}</p>
         </div>
+
         {artist && <p className="single-item__type">{artist}</p>}
       </div>
     </Link>

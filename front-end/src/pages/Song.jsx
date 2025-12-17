@@ -56,7 +56,7 @@ const Song = () => {
     <div className="song">
       <div className="song__container">
         <div className="song__image-container">
-          <img src={`${API_URL}${image}`} alt={`Imagem da música ${name}`} />
+          <img src={image ? `${API_URL}${image}` : ""} alt={`Imagem da música ${name}`} />
         </div>
       </div>
 
@@ -65,7 +65,7 @@ const Song = () => {
           <img
             width={75}
             height={75}
-            src={`${API_URL}${artistObj.image}`}
+            src={artistObj.image ? `${API_URL}${artistObj.image}` : ""}
             alt={`Imagem do Artista ${artist}`}
           />
         )}
