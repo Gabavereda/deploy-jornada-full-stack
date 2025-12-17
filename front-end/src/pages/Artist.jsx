@@ -22,9 +22,7 @@ const Artist = () => {
           getArtists(),
         ]);
 
-        const currentArtist = allArtists.find(
-          (artist) => artist._id === id
-        );
+        const currentArtist = allArtists.find(artist => artist._id === id);
 
         if (!currentArtist) {
           setArtistName("Artista não encontrado");
@@ -34,19 +32,20 @@ const Artist = () => {
 
         setArtistName(currentArtist.name);
 
-        const artistSongs = allSongs.filter(
-          (song) => song.artist === currentArtist.name
-        );
-
+        const artistSongs = allSongs.filter(song => song.artist === currentArtist.name);
         setSongs(artistSongs);
 
+        // Banner: artista > primeira música > vazio
         if (currentArtist.image) {
           setBannerImage(`${API_URL}${currentArtist.image}`);
         } else if (artistSongs.length > 0) {
           setBannerImage(`${API_URL}${artistSongs[0].image}`);
+        } else {
+          setBannerImage(""); // fallback vazio
         }
+
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao carregar artista:", error);
       } finally {
         setLoading(false);
       }
@@ -56,8 +55,7 @@ const Artist = () => {
   }, [id]);
 
   if (loading) return <p>Carregando...</p>;
-  if (songs.length === 0)
-    return <p>Este artista ainda não possui músicas</p>;
+  if (songs.length === 0) return <p>Este artista ainda não possui músicas</p>;
 
   const randomIndex = Math.floor(Math.random() * songs.length);
   const randomIdFromArtist = songs[randomIndex]._id;
@@ -68,11 +66,7 @@ const Artist = () => {
         className="artist__header"
         style={{
           backgroundImage: `
-            linear-gradient(
-              to bottom,
-              var(--_shade),
-              var(--_shade)
-            ),
+            linear-gradient(to bottom, var(--_shade), var(--_shade)),
             url(${bannerImage})
           `,
         }}

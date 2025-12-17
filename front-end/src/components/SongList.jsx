@@ -6,25 +6,19 @@ const SongList = ({ songsArray }) => {
 
   return (
     <div className="song-list">
-      {songsArray
-        .slice(0, items)
-        .map((song, index) => (
-          <SongItem
-            key={song._id}
-            id={song._id}
-            index={index}
-            name={song.name}
-            image={song.image}
-            duration={song.duration}
-          />
-
-        ))}
+      {songsArray.slice(0, items).map((song, index) => (
+        <SongItem
+          key={song._id}
+          id={song._id}
+          index={index}
+          name={song.name}
+          image={song.image}
+          duration={song.duration}
+        />
+      ))}
 
       {items < songsArray.length && (
-        <p
-          className="song-list__see-more"
-          onClick={() => setItems((prev) => prev + 5)}
-        >
+        <p className="song-list__see-more" onClick={() => setItems(prev => prev + 5)}>
           Ver mais
         </p>
       )}

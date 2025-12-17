@@ -18,20 +18,13 @@ const Song = () => {
       try {
         const allSongs = await getSongs();
         const allArtists = await getArtists();
-
-        const currentSong = allSongs.find((song) => song._id === id);
+        const currentSong = allSongs.find(song => song._id === id);
         if (!currentSong) return;
 
         setSongObj(currentSong);
-
-        const artistSongs = allSongs.filter(
-          (song) => song.artist === currentSong.artist
-        );
+        const artistSongs = allSongs.filter(song => song.artist === currentSong.artist);
         setSongsFromArtist(artistSongs);
-
-        const artistFound = allArtists.find(
-          (a) => a.name === currentSong.artist
-        );
+        const artistFound = allArtists.find(a => a.name === currentSong.artist);
         setArtistObj(artistFound || null);
       } catch (err) {
         console.error(err);
@@ -39,7 +32,6 @@ const Song = () => {
         setLoading(false);
       }
     }
-
     loadSong();
   }, [id]);
 
@@ -47,10 +39,8 @@ const Song = () => {
   if (!songObj) return <p>Música não encontrada</p>;
 
   const { image, name, duration, artist, audio } = songObj;
-  const randomIdFromArtist =
-    songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
-  const randomId2FromArtist =
-    songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
+  const randomIdFromArtist = songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
+  const randomId2FromArtist = songsFromArtist[Math.floor(Math.random() * songsFromArtist.length)]?._id;
 
   return (
     <div className="song">
@@ -61,22 +51,8 @@ const Song = () => {
       </div>
 
       <div className="song__bar">
-        {artistObj && (
-          <img
-            width={75}
-            height={75}
-            src={artistObj.image ? `${API_URL}${artistObj.image}` : ""}
-            alt={`Imagem do Artista ${artist}`}
-          />
-        )}
-
-        <Player
-          duration={duration}
-          randomIdFromArtist={randomIdFromArtist}
-          randomId2FromArtist={randomId2FromArtist}
-          audio={audio}
-        />
-
+        {artistObj && <img width={75} height={75} src={artistObj.image ? `${API_URL}${artistObj.image}` : ""} alt={`Imagem do Artista ${artist}`} />}
+        <Player duration={duration} randomIdFromArtist={randomIdFromArtist} randomId2FromArtist={randomId2FromArtist} audio={audio} />
         <div>
           <p className="song__name">{name}</p>
           <p>{artist}</p>
