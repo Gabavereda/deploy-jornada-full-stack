@@ -8,20 +8,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-const formatTime = (timeInSeconds) => {
-  const minutes = Math.floor(timeInSeconds / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = Math.floor(timeInSeconds % 60)
-    .toString()
-    .padStart(2, "0");
-
-  return `${minutes}:${seconds}`;
-};
-
-const timeInSeconds = (timeString) => {
-  const [minutes, seconds] = timeString.split(":").map(Number);
-  return minutes * 60 + seconds;
+const formatTime = (seconds = 0) => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 };
 
 const Player = ({
@@ -30,54 +20,59 @@ const Player = ({
   randomId2FromArtist,
   audio,
 }) => {
-  const audioPlayer = useRef(null);
-  const progressBar = useRef(null);
+  const audioRef = useRef(null);
+  const progressRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(formatTime(0));
+  const [currentTime, setCurrentTime] = useState("00:00");
 
-  const durationInSeconds = timeInSeconds(duration);
+  const durationInSeconds =
+    duration?.includes(":")
+      ? Number(duration.split(":")[0]) * 60 +
+        Number(duration.split(":")[1])
+      : 0;
 
-  const playPause = () => {
-    if (!audioPlayer.current) return;
+  const playPause = async () => {
+    if (!audioRef.current) return;
 
-    if (isPlaying) {
-      audioPlayer.current.pause();
-    } else {
-      audioPlayer.current.play();
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        await audioRef.current.play();
+      }
+      setIsPlaying((prev) => !prev);
+    } catch (err) {
+      console.error("Erro ao tocar áudio:", err);
     }
-
-    setIsPlaying((prev) => !prev);
   };
 
-  // ⏱ Atualiza tempo e barra
   useEffect(() => {
-    if (!audioPlayer.current || !progressBar.current) return;
+    if (!audioRef.current) return;
 
-    const intervalId = setInterval(() => {
+    const interval = setInterval(() => {
       if (!isPlaying) return;
 
-      const current = audioPlayer.current.currentTime;
-
+      const current = audioRef.current.currentTime;
       setCurrentTime(formatTime(current));
 
-      progressBar.current.style.setProperty(
-        "--_progress",
-        `${(current / durationInSeconds) * 100}%`
-      );
-    }, 1000);
+      if (progressRef.current && durationInSeconds) {
+        progressRef.current.style.setProperty(
+          "--_progress",
+          `${(current / durationInSeconds) * 100}%`
+        );
+      }
+    }, 500);
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(interval);
   }, [isPlaying, durationInSeconds]);
 
-  // 🔁 Resetar player ao trocar de música
   useEffect(() => {
-    if (!audioPlayer.current) return;
-
-    audioPlayer.current.pause();
-    audioPlayer.current.currentTime = 0;
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
     setIsPlaying(false);
-    setCurrentTime(formatTime(0));
+    setCurrentTime("00:00");
   }, [audio]);
 
   return (
@@ -85,25 +80,18 @@ const Player = ({
       <div className="player__controllers">
         {randomIdFromArtist && (
           <Link to={`/song/${randomIdFromArtist}`}>
-            <FontAwesomeIcon
-              className="player__icon"
-              icon={faBackwardStep}
-            />
+            <FontAwesomeIcon icon={faBackwardStep} />
           </Link>
         )}
 
         <FontAwesomeIcon
-          className="player__icon player__icon--play"
           icon={isPlaying ? faCirclePause : faCirclePlay}
           onClick={playPause}
         />
 
         {randomId2FromArtist && (
           <Link to={`/song/${randomId2FromArtist}`}>
-            <FontAwesomeIcon
-              className="player__icon"
-              icon={faForwardStep}
-            />
+            <FontAwesomeIcon icon={faForwardStep} />
           </Link>
         )}
       </div>
@@ -113,7 +101,7 @@ const Player = ({
 
         <div className="player__bar">
           <div
-            ref={progressBar}
+            ref={progressRef}
             className="player__bar-progress"
           />
         </div>
@@ -121,7 +109,7 @@ const Player = ({
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioPlayer} src={audio} />
+      <audio ref={audioRef} src={audio} preload="metadata" />
     </div>
   );
 };

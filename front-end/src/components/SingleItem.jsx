@@ -3,11 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const SingleItem = ({ id, name, image, artist, idPath }) => {
   if (!id) return null;
 
-  // Monta o caminho da imagem considerando que está no public
-  const imageUrl = image.startsWith("http") ? image : `/images/${image}`;
+  const imageUrl = image?.startsWith("http")
+    ? image
+    : `${API_URL}${image}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
@@ -31,7 +34,9 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
           <p className="single-item__title">{name}</p>
         </div>
 
-        {artist && <p className="single-item__type">{artist}</p>}
+        {artist && (
+          <p className="single-item__type">{artist}</p>
+        )}
       </div>
     </Link>
   );
