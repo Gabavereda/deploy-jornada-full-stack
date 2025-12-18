@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import { getSongs,getArtists } from "/api/api.js";
+import { getSongs } from "/api/api.js";
 
 
 const Song = () => {
