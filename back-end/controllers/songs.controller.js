@@ -1,5 +1,5 @@
 import Artist from "../../front-end/src/pages/Artist.jsx";
-import Song from "../models/Song.js";
+import Song from "../models/song.js";
 
 export const getSongs = async (req, res) => {
   const songs = await Song.find();

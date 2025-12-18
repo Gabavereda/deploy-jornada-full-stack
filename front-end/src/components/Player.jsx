@@ -80,6 +80,11 @@ const Player = ({
     setCurrentTime(formatTime(0));
   }, [audio]);
 
+
+  const audioUrl = audio.startsWith("http")
+    ? audio
+    : `/songs/${audio}`;
+
   return (
     <div className="player">
       <div className="player__controllers">
@@ -121,7 +126,9 @@ const Player = ({
         <p>{duration}</p>
       </div>
 
-      <audio ref={audioPlayer} src={audio} />
+
+
+      <audio ref={audioPlayer} src={audioUrl} />
     </div>
   );
 };

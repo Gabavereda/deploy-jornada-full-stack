@@ -46,9 +46,9 @@ const Song = () => {
   const { image, name, duration, artist, audio } = songObj;
 
   // 3️⃣ Buscar artista (continua local)
-  const artistObj = getArtists(
-    (artistObj) => artistObj.name === artist
-  );
+  // const artistObj = getArtists(
+  //   (artistObj) => artistObj.name === artist
+  // );
 
   // 4️⃣ IDs aleatórios seguros
   const randomIndex1 = Math.floor(
