@@ -1,4 +1,3 @@
-import Artist from "../../front-end/src/pages/Artist.jsx";
 import Song from "../models/song.js";
 
 export const getSongs = async (req, res) => {

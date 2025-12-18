@@ -128,7 +128,11 @@ const Player = ({
 
 
 
-      <audio ref={audioPlayer} src={audioUrl} />
+      <audio
+        ref={audioPlayer}
+        src={`${API_URL}${audio}`}
+      />
+
     </div>
   );
 };

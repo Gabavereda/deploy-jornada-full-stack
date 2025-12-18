@@ -7,7 +7,10 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
   if (!id) return null;
 
   // Monta o caminho da imagem considerando que está no public
-  const imageUrl = image.startsWith("http") ? image : `/images/${image}`;
+  const imageUrl = image.startsWith("http")
+    ? image
+    : `${API_URL}/images/${image}`;
+
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
