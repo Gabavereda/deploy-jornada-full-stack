@@ -7,18 +7,12 @@ import {
   faForwardStep,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { API_URL } from "/api/api";
 
-
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 const formatTime = (timeInSeconds) => {
-  const minutes = Math.floor(timeInSeconds / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = Math.floor(timeInSeconds % 60)
-    .toString()
-    .padStart(2, "0");
-
+  const minutes = Math.floor(timeInSeconds / 60).toString().padStart(2, "0");
+  const seconds = Math.floor(timeInSeconds % 60).toString().padStart(2, "0");
   return `${minutes}:${seconds}`;
 };
 
@@ -27,12 +21,7 @@ const timeInSeconds = (timeString) => {
   return minutes * 60 + seconds;
 };
 
-const Player = ({
-  duration,
-  randomIdFromArtist,
-  randomId2FromArtist,
-  audio,
-}) => {
+const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) => {
   const audioPlayer = useRef(null);
   const progressBar = useRef(null);
 
@@ -41,98 +30,79 @@ const Player = ({
 
   const durationInSeconds = timeInSeconds(duration);
 
-  const playPause = () => {
+  const audioUrl = audio.startsWith("http")
+    ? audio
+    : `${API_URL}${audio}`; // "/songs/musica.mp3"
+
+  const playPause = async () => {
     if (!audioPlayer.current) return;
 
-    if (isPlaying) {
-      audioPlayer.current.pause();
-    } else {
-      audioPlayer.current.play();
+    try {
+      if (isPlaying) {
+        audioPlayer.current.pause();
+      } else {
+        await audioPlayer.current.play();
+      }
+      setIsPlaying(prev => !prev);
+    } catch (err) {
+      console.error("Erro ao tocar áudio:", err);
     }
-
-    setIsPlaying((prev) => !prev);
   };
 
-  // ⏱ Atualiza tempo e barra
   useEffect(() => {
     if (!audioPlayer.current || !progressBar.current) return;
 
-    const intervalId = setInterval(() => {
+    const interval = setInterval(() => {
       if (!isPlaying) return;
-
       const current = audioPlayer.current.currentTime;
-
       setCurrentTime(formatTime(current));
-
       progressBar.current.style.setProperty(
         "--_progress",
         `${(current / durationInSeconds) * 100}%`
       );
     }, 1000);
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(interval);
   }, [isPlaying, durationInSeconds]);
 
-  // 🔁 Resetar player ao trocar de música
   useEffect(() => {
     if (!audioPlayer.current) return;
-
     audioPlayer.current.pause();
     audioPlayer.current.currentTime = 0;
     setIsPlaying(false);
     setCurrentTime(formatTime(0));
   }, [audio]);
 
-
-  const audioUrl = audio.startsWith("http")
-    ? audio
-    : `${API_URL}${audio}`;
-
   return (
     <div className="player">
       <div className="player__controllers">
         {randomIdFromArtist && (
           <Link to={`/song/${randomIdFromArtist}`}>
-            <FontAwesomeIcon
-              className="player__icon"
-              icon={faBackwardStep}
-            />
+            <FontAwesomeIcon icon={faBackwardStep} />
           </Link>
         )}
 
         <FontAwesomeIcon
-          className="player__icon player__icon--play"
           icon={isPlaying ? faCirclePause : faCirclePlay}
           onClick={playPause}
         />
 
         {randomId2FromArtist && (
           <Link to={`/song/${randomId2FromArtist}`}>
-            <FontAwesomeIcon
-              className="player__icon"
-              icon={faForwardStep}
-            />
+            <FontAwesomeIcon icon={faForwardStep} />
           </Link>
         )}
       </div>
 
       <div className="player__progress">
         <p>{currentTime}</p>
-
         <div className="player__bar">
-          <div
-            ref={progressBar}
-            className="player__bar-progress"
-          />
+          <div ref={progressBar} className="player__bar-progress" />
         </div>
-
         <p>{duration}</p>
       </div>
 
-
-
-      <audio ref={audioPlayer} src={audioUrl} />
-
+      <audio ref={audioPlayer} src={audioUrl} preload="metadata" />
     </div>
   );
 };

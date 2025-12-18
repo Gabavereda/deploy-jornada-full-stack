@@ -54,7 +54,7 @@ const Artist = () => {
       <div
         className="artist__header"
         style={{
-          backgroundImage: `linear-gradient(to bottom, var(--_shade), var(--_shade)), url(${songs[0].image})`,
+          backgroundImage: `linear-gradient(to bottom, var(--_shade), var(--_shade)), url(${API_URL}/images/${songs[0].image})`,
         }}
       >
         <h2 className="artist__title">{artistName}</h2>
