@@ -2,9 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const SongItem = ({ id, image, name, duration, index }) => {
+
   const imageUrl = image.startsWith("http")
     ? image
     : `${API_URL}/images/${image}`;
+
 
 
   return (

@@ -1,3 +1,5 @@
+export const API_URL = import.meta.env.VITE_API_URL;
+
 export async function getSongs() {
   const response = await fetch("/api/songs");
   if (!response.ok) throw new Error("Erro ao buscar músicas");

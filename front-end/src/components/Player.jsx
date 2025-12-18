@@ -7,6 +7,9 @@ import {
   faForwardStep,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { API_URL } from "/api/api";
+
+
 
 const formatTime = (timeInSeconds) => {
   const minutes = Math.floor(timeInSeconds / 60)
@@ -83,7 +86,7 @@ const Player = ({
 
   const audioUrl = audio.startsWith("http")
     ? audio
-    : `/songs/${audio}`;
+    : `${API_URL}${audio}`;
 
   return (
     <div className="player">
@@ -128,10 +131,7 @@ const Player = ({
 
 
 
-      <audio
-        ref={audioPlayer}
-        src={`${API_URL}${audio}`}
-      />
+      <audio ref={audioPlayer} src={audioUrl} />
 
     </div>
   );
