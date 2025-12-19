@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin:'https://deploy-jornada-full-stack-crgo.onrender.com'}));
 app.use(express.json());
 
 // Rotas da API
