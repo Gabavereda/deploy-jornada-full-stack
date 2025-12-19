@@ -7,19 +7,16 @@ import { API_URL } from "/api/api";
 const SingleItem = ({ id, name, image, artist, idPath }) => {
   if (!id) return null;
 
-  const imageUrl = image.startsWith("http")
-    ? image
-    : `${API_URL}/images/${image}`;
+  const urlBackend = import.meta.env.VITE_API_URL;
+  const imagemCompleta = `${urlBackend}${currObj.image}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
       <div className="single-item__div-image-button">
         <div className="single-item__div-image">
-          <img
-            className="single-item__image"
-            src={imageUrl}
-            alt={`Imagem ${name}`}
-          />
+          <img src={imagemCompleta} alt={name} />
+          alt={`Imagem ${name}`}
+
         </div>
 
         <FontAwesomeIcon
