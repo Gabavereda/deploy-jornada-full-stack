@@ -21,3 +21,5 @@ const SongItem = ({ id, image, name, duration, index }) => {
     </Link>
   );
 };
+
+export default SongItem;
