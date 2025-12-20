@@ -5,16 +5,17 @@ import { Link } from "react-router-dom";
 import { API_URL } from "/api/api";
 
 const SingleItem = ({ id, name, image, artist, idPath }) => {
-  if (!id) return null;
-
-  // Pegamos a URL do Backend da env
   const urlBackend = import.meta.env.VITE_API_URL || "";
 
-  // Lógica para evitar barras duplas e caminhos errados:
-  // Se image já começa com "/", não precisamos adicionar outra barra
+  // Se 'image' no banco já for "/images/foto.jpg"
+  // E 'urlBackend' for "https://link.com"
+  // Esta lógica garante que não haverá duplicação
   const imagemCompleta = image.startsWith('http')
     ? image
-    : `${urlBackend}${image.startsWith('/') ? image : '/' + image}`;
+    : `${urlBackend}${image}`;
+
+  // Se mesmo assim aparecer duplicado, use esta versão radical:
+  // const imagemCompleta = `${urlBackend}${image.replace('/images/images/', '/images/')}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
