@@ -1,12 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_API_URL || "";
-
 const SongItem = ({ id, image, name, duration, index }) => {
+  const API_URL = import.meta.env.VITE_API_URL || "";
+
+  // CORREÇÃO: Não adicione /images/ se o banco já trouxer isso
   const imageUrl = image.startsWith("http")
     ? image
-    : `${API_URL}/images/${image}`;
+    : `${API_URL}${image.startsWith('/') ? image : '/' + image}`;
 
   return (
     <Link to={`/song/${id}`} className="song-item">
@@ -23,5 +21,3 @@ const SongItem = ({ id, image, name, duration, index }) => {
     </Link>
   );
 };
-
-export default SongItem;
