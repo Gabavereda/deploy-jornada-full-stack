@@ -18,8 +18,12 @@ const SongItem = ({ id, image, name, duration, index }) => {
         <p>{index + 1}</p>
 
         <div className="song-item__album">
-          <img src={imageUrl} alt={name || "Música"} />
-          <p>{name || "Música sem nome"}</p>
+          <img src={imageUrl}
+            alt={name || "Música"}
+            className="song-item__image"
+          />
+          <p className="song-item__name"
+          >{name || "Música sem nome"}</p>
         </div>
       </div>
 

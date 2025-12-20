@@ -80,18 +80,20 @@ const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) =>
       <div className="player__controllers">
         {randomIdFromArtist && (
           <Link to={`/song/${randomIdFromArtist}`}>
-            <FontAwesomeIcon icon={faBackwardStep} />
+            <FontAwesomeIcon className="player__icon" icon={faBackwardStep} />
           </Link>
         )}
 
         <FontAwesomeIcon
+          className="player__icon player__icon--play"
           icon={isPlaying ? faCirclePause : faCirclePlay}
           onClick={playPause}
         />
 
         {randomId2FromArtist && (
           <Link to={`/song/${randomId2FromArtist}`}>
-            <FontAwesomeIcon icon={faForwardStep} />
+            <FontAwesomeIcon className="player__icon"
+              icon={faForwardStep} />
           </Link>
         )}
       </div>
