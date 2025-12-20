@@ -30,9 +30,11 @@ const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) =>
 
   const durationInSeconds = timeInSeconds(duration);
 
+  // LÓGICA DE URL SEGURA PARA O ÁUDIO
+  const API_URL = import.meta.env.VITE_API_URL || "";
   const audioUrl = audio.startsWith("http")
     ? audio
-    : `${API_URL}${audio}`; // "/songs/musica.mp3"
+    : `${API_URL}${audio.startsWith('/') ? audio : '/' + audio}`;
 
   const playPause = async () => {
     if (!audioPlayer.current) return;
