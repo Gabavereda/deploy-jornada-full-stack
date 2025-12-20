@@ -7,19 +7,20 @@ import { API_URL } from "/api/api";
 const SingleItem = ({ id, name, image, artist, idPath }) => {
   if (!id) return null;
 
-  // 1. Pegue a URL do backend (ex: https://...onrender.com)
+  // Pegamos a URL do Backend da env
   const urlBackend = import.meta.env.VITE_API_URL || "";
 
-  // 2. Garanta que não existam duas barras "//" ou que não falte a barra
-  // Se image já for "/images/...", o resultado será "https://backend.com/images/..."
-  const imagemCompleta = `${urlBackend}${image}`;
+  // Lógica para evitar barras duplas e caminhos errados:
+  // Se image já começa com "/", não precisamos adicionar outra barra
+  const imagemCompleta = image.startsWith('http')
+    ? image
+    : `${urlBackend}${image.startsWith('/') ? image : '/' + image}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
       <div className="single-item__div-image-button">
         <div className="single-item__div-image">
-          {/* Use a variável imagemCompleta aqui */}
-          <img src={imagemCompleta} alt={`Imagem de ${name}`} />
+          <img src={imagemCompleta} alt={name} />
         </div>
 
         <FontAwesomeIcon
