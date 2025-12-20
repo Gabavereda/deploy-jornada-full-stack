@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import SongList from "../components/SongList";
-import { getSongs, getArtists } from "/api/api";
+import { getSongs, getArtists } from "../api/api";
 
 // IMPORTANTE: Definir a URL do backend aqui no topo
 const API_URL = import.meta.env.VITE_API_URL || "";
