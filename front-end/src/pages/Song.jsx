@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import { getSongs } from "/api/api.js"; // Certifique-se que este caminho está correto
+import { getSongs } from "../api/api.js"; // Certifique-se que este caminho está correto
 
 const Song = () => {
   const { id } = useParams();

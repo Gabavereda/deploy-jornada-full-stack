@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Main from "../components/Main";
-import { getSongs, getArtists } from "/api/api";
+import { getSongs, getArtists } from "../api/api";
 
 const Home = () => {
   const [songs, setSongs] = useState([]);
