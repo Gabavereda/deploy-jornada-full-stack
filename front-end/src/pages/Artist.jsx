@@ -23,7 +23,7 @@ const Artist = () => {
 
         // Busca o artista pelo ID da URL
         const currentArtist = allArtists.find(a => a._id === id);
-        
+
         if (!currentArtist) {
           setArtistName("Artista não encontrado");
           setLoading(false);
@@ -36,7 +36,7 @@ const Artist = () => {
         const artistSongs = allSongs.filter(
           song => song.artist === currentArtist.name
         );
-        
+
         setSongs(artistSongs);
       } catch (error) {
         console.error("Erro ao carregar dados do artista:", error);
@@ -61,12 +61,12 @@ const Artist = () => {
 
   // IDs para o botão de Play Aleatório
   const randomIndex = Math.floor(Math.random() * songs.length);
-  const randomIdFromArtist = songs[randomIndex]?._id;
+  const randomIdFromArtist = songs[randomIndex]?._id; // O '?' evita o crash se for nulo
 
   // Lógica de Banner Segura (Verifica se a imagem existe)
-  const firstImage = songs[0]?.image || "";
-  const bannerImage = firstImage.startsWith("http") 
-    ? firstImage 
+  const firstImage = songs[0]?.image || ""; // O '?' evita o crash se a lista estiver vazia
+  const bannerImage = firstImage.startsWith("http")
+    ? firstImage
     : `${API_URL}${firstImage.startsWith('/') ? firstImage : '/' + firstImage}`;
 
   return (
