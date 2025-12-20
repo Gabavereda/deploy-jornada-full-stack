@@ -2,32 +2,27 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { API_URL } from "/api/api";
 
-const SingleItem = ({ id, name, image, artist, idPath }) => {
-  const urlBackend = import.meta.env.VITE_API_URL || "";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
-  // Se 'image' no banco já for "/images/foto.jpg"
-  // E 'urlBackend' for "https://link.com"
-  // Esta lógica garante que não haverá duplicação
-  const imagemCompleta = image.startsWith('http')
+const SingleItem = ({ id, name, image, banner, artist, idPath }) => {
+  // ESCUDO: Protege contra campos de imagem vazios no banco
+  const imageUrl = image?.startsWith("http")
     ? image
-    : `${urlBackend}${image}`;
-
-  // Se mesmo assim aparecer duplicado, use esta versão radical:
-  // const imagemCompleta = `${urlBackend}${image.replace('/images/images/', '/images/')}`;
+    : `${API_URL}${image?.startsWith('/') ? image : '/' + (image || "")}`;
 
   return (
     <Link to={`${idPath}/${id}`} className="single-item">
       <div className="single-item__div-image-button">
         <div className="single-item__div-image">
-          <img src={imagemCompleta} alt={name} />
+          <img
+            className="single-item__image"
+            src={imageUrl}
+            alt={`Imagem do Artista ${name}`}
+          />
         </div>
 
-        <FontAwesomeIcon
-          className="single-item__icon"
-          icon={faCirclePlay}
-        />
+        <FontAwesomeIcon className="single-item__icon" icon={faCirclePlay} />
       </div>
 
       <div className="single-item__texts">
@@ -35,7 +30,7 @@ const SingleItem = ({ id, name, image, artist, idPath }) => {
           <p className="single-item__title">{name}</p>
         </div>
 
-        {artist && <p className="single-item__type">{artist}</p>}
+        <p className="single-item__type">{artist ?? "Artista"}</p>
       </div>
     </Link>
   );

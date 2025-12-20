@@ -1,15 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom"; // ESTE IMPORT É OBRIGATÓRIO AQUI
+import { Link } from "react-router-dom"; // IMPORTANTE: Sem isso a página crasha
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 const SongItem = ({ id, image, name, duration, index }) => {
-  // PROTEÇÃO: O ?. e o || "" garantem que se a imagem for nula, o site não crasha
+  // ESCUDO: Se image for undefined, o ?. impede o crash
   const imageUrl = image?.startsWith("http")
     ? image
     : `${API_URL}${image?.startsWith('/') ? image : '/' + (image || "")}`;
 
-  // Se o ID não existir, não renderizamos o item para evitar erro no Link
+  // Se não houver ID, não renderiza para não quebrar o Link abaixo
   if (!id) return null;
 
   return (
