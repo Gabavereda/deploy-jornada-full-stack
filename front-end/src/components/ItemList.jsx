@@ -10,7 +10,7 @@ const ItemList = ({ title, items, itemsArray, path, idPath, idKey }) => {
   return (
     <div className="item-list">
       <div className="item-list__header">
-        <h2>{title} populares</h2>
+        <h2>{title} Da cena</h2>
 
         {isHome && (
           <Link to={path} className="item-list__link">

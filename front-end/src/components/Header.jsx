@@ -1,16 +1,16 @@
 import React from "react";
-import logoSpotify from "../assets/logo/spotify-logo.png";
+import cenaquecena from "../assets/logo/cenaquecena.png";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <div className="header">
       <Link to="/">
-        <img src={logoSpotify} alt="Logo do Spotify" />
+        <img src={cenaquecena} alt="Logo da cena" />
       </Link>
 
       <Link to="/" className="header__link">
-        <h1>Spotify</h1>
+        <h1>Cena...que Cena?</h1>
       </Link>
     </div>
   );

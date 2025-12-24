@@ -87,9 +87,16 @@ const Artist = () => {
 
       <div className="artist__body">
         <h2>Sobre o Artista</h2>
-        <p>Manda Busca é uma banda...</p>
+        <p>Aqui Vai Bio </p>
         {/* ... restante do texto */}
-      </div>
+
+        {/* to do  */}
+        <div className=".artist-loja__body">
+          <h2>Loja</h2>
+          <p>Aqui  vai Loja</p>
+          {/* ... restante do texto */}
+        </div>
+          </div>
 
       {/* Só renderiza o Link se houver um ID válido */}
       {randomIdFromArtist && (
