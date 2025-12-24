@@ -11,6 +11,7 @@ const Artist = () => {
   const { id } = useParams();
   const [songs, setSongs] = useState([]);
   const [artistName, setArtistName] = useState("");
+  const [artistBio, setArtistBio] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Artist = () => {
         }
 
         setArtistName(currentArtist.name);
+        setArtistBio(currentArtist.bio);
 
         // Filtra as músicas deste artista
         const artistSongs = allSongs.filter(
@@ -87,7 +89,7 @@ const Artist = () => {
 
       <div className="artist__body">
         <h2>Sobre o Artista</h2>
-        <p>Aqui Vai Bio </p>
+        <p> {artistBio} </p>
         {/* ... restante do texto */}
 
         {/* to do  */}
@@ -96,7 +98,7 @@ const Artist = () => {
           <p>Aqui  vai Loja</p>
           {/* ... restante do texto */}
         </div>
-          </div>
+      </div>
 
       {/* Só renderiza o Link se houver um ID válido */}
       {randomIdFromArtist && (

@@ -4,7 +4,8 @@ const artistSchema = new mongoose.Schema(
     {
         image: String,
         name: String,
-        banner: String
+        banner: String,
+        bio: String
     },
     { timestamps: true }
 );
