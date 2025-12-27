@@ -10,70 +10,69 @@ import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
-const formatTime = (timeInSeconds) => {
-  const minutes = Math.floor(timeInSeconds / 60).toString().padStart(2, "0");
-  const seconds = Math.floor(timeInSeconds % 60).toString().padStart(2, "0");
-  return `${minutes}:${seconds}`;
+const formatTime = (seconds = 0) => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 };
 
-const timeInSeconds = (timeString) => {
-  const [minutes, seconds] = timeString.split(":").map(Number);
-  return minutes * 60 + seconds;
-};
-
-const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) => {
-  const audioPlayer = useRef(null);
-  const progressBar = useRef(null);
+const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
+  const audioRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(formatTime(0));
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-  const durationInSeconds = timeInSeconds(duration);
-
-  // LÓGICA DE URL SEGURA PARA O ÁUDIO
-  const API_URL = import.meta.env.VITE_API_URL || "";
-  const audioUrl = audio.startsWith("http")
+  const audioUrl = audio?.startsWith("http")
     ? audio
-    : `${API_URL}${audio.startsWith('/') ? audio : '/' + audio}`;
+    : `${API_URL}${audio?.startsWith("/") ? audio : "/" + audio}`;
 
-  const playPause = async () => {
-    if (!audioPlayer.current) return;
+  const togglePlay = async () => {
+    if (!audioRef.current) return;
 
     try {
-      if (isPlaying) {
-        audioPlayer.current.pause();
+      if (audioRef.current.paused) {
+        await audioRef.current.play();
+        setIsPlaying(true);
       } else {
-        await audioPlayer.current.play();
+        audioRef.current.pause();
+        setIsPlaying(false);
       }
-      setIsPlaying(prev => !prev);
     } catch (err) {
       console.error("Erro ao tocar áudio:", err);
     }
   };
 
+  // Eventos nativos do áudio
   useEffect(() => {
-    if (!audioPlayer.current || !progressBar.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    const interval = setInterval(() => {
-      if (!isPlaying) return;
-      const current = audioPlayer.current.currentTime;
-      setCurrentTime(formatTime(current));
-      progressBar.current.style.setProperty(
-        "--_progress",
-        `${(current / durationInSeconds) * 100}%`
-      );
-    }, 1000);
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onEnded = () => setIsPlaying(false);
 
-    return () => clearInterval(interval);
-  }, [isPlaying, durationInSeconds]);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("ended", onEnded);
 
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, [audioUrl]);
+
+  // Quando muda de música
   useEffect(() => {
-    if (!audioPlayer.current) return;
-    audioPlayer.current.pause();
-    audioPlayer.current.currentTime = 0;
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    setCurrentTime(0);
     setIsPlaying(false);
-    setCurrentTime(formatTime(0));
-  }, [audio]);
+  }, [audioUrl]);
+
+  const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="player">
@@ -87,26 +86,30 @@ const Player = ({ duration, randomIdFromArtist, randomId2FromArtist, audio }) =>
         <FontAwesomeIcon
           className="player__icon player__icon--play"
           icon={isPlaying ? faCirclePause : faCirclePlay}
-          onClick={playPause}
+          onClick={togglePlay}
         />
 
         {randomId2FromArtist && (
           <Link to={`/song/${randomId2FromArtist}`}>
-            <FontAwesomeIcon className="player__icon"
-              icon={faForwardStep} />
+            <FontAwesomeIcon className="player__icon" icon={faForwardStep} />
           </Link>
         )}
       </div>
 
       <div className="player__progress">
-        <p>{currentTime}</p>
+        <p>{formatTime(currentTime)}</p>
+
         <div className="player__bar">
-          <div ref={progressBar} className="player__bar-progress" />
+          <div
+            className="player__bar-progress"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-        <p>{duration}</p>
+
+        <p>{formatTime(duration)}</p>
       </div>
 
-      <audio ref={audioPlayer} src={audioUrl} preload="metadata" />
+      <audio ref={audioRef} src={audioUrl} preload="metadata" />
     </div>
   );
 };
