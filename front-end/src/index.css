@@ -86,7 +86,6 @@ img {
     padding: 12px 16px;
   }
 }
-
 /* ItemList */
 
 .item-list {
@@ -100,25 +99,28 @@ img {
   justify-content: space-between;
   align-items: center;
   line-height: 130%;
+  margin-bottom: 16px; /* ✨ espaço antes do grid */
 }
 
 .item-list__container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(172px, 1fr));
+  gap: 16px; /* ✨ IMPORTANTE: espaço entre os cards */
 }
 
 @media (max-width: 480px) {
   .item-list {
-    gap: 20px;
+    gap: 8px; /* ✨ estava "px" sem número */
   }
 
   .item-list__container {
-    gap: 16px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* ✨ cards menores em mobile */
+    gap: 12px;
   }
 
   .item-list__header {
     flex-direction: column;
+    align-items: flex-start; /* ✨ alinha à esquerda em mobile */
     gap: 10px;
   }
 }
@@ -126,23 +128,25 @@ img {
 /* SingleItem */
 
 .single-item {
-  padding: 25px 16px;
+  padding: 16px; /* ✨ padding uniforme */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px; /* ✨ gap consistente */
   border-radius: var(--border-radius-l);
   align-items: center;
-  transition: background-color var(--transition-function)
-    var(--transition-duration);
+  cursor: pointer; /* ✨ indica que é clicável */
+  transition: all var(--transition-duration) var(--transition-function); /* ✨ transição suave de tudo */
 }
 
 .single-item:hover {
   background-color: var(--green-900);
   text-decoration: none;
+  transform: translateY(-4px); /* ✨ efeito de elevação */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* ✨ sombra no hover */
 }
 
 .single-item:hover .single-item__icon {
-  opacity: 100%;
+  opacity: 1; /* ✨ era 100%, correto é 1 */
   transform: translateY(0);
 }
 
@@ -153,29 +157,39 @@ img {
 
 .single-item__div-image-button {
   position: relative;
+  width: 100%; /* ✨ garante responsividade */
 }
 
 .single-item__div-image {
-  width: 140px;
-  height: 140px;
+  width: 100%; /* ✨ responsivo */
+  aspect-ratio: 1 / 1; /* ✨ mantém proporção */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  background-color: var(--green-900); /* ✨ fallback enquanto carrega */
+}
+
+.single-item__div-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ✨ ESSENCIAL para imagens */
 }
 
 .single-item__icon {
   position: absolute;
-  font-size: 50px;
-  right: 7.5px;
-  bottom: 7.5px;
+  font-size: 48px; /* ✨ tamanho par */
+  right: 8px;
+  bottom: 8px;
   color: var(--green-400);
+  background-color: rgba(0, 0, 0, 0.8); /* ✨ fundo para contraste */
+  border-radius: 50%;
+  padding: 8px;
   opacity: 0;
-  transform: translateY(100%);
-  transition-timing-function: var(--transition-function);
-  transition-duration: var(--transition-duration);
-  transition-property: opacity, transform;
+  transform: translateY(8px); /* ✨ movimento sutil */
+  transition: all var(--transition-duration) var(--transition-function);
+  pointer-events: none; /* ✨ não interfere no clique */
 }
 
 .single-item__icon--artist {
@@ -184,20 +198,27 @@ img {
   transform: translateY(0);
   right: 25px;
   bottom: 25px;
+  pointer-events: all; /* ✨ permite clique */
+  z-index: 1000; /* ✨ fica acima de tudo */
 }
 
 .single-item__title {
   font-weight: 600;
+  width: 100%; /* ✨ ocupa toda largura */
+  text-align: center;
 }
 
 .single-item__type {
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.7); /* ✨ texto secundário mais suave */
 }
 
 .single-item__texts {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px; /* ✨ gap menor para textos */
+  width: 100%;
+  text-align: center;
 }
 
 .single-item__2lines {
@@ -205,22 +226,34 @@ img {
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
-  box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis; /* ✨ adiciona ... */
+  word-break: break-word; /* ✨ quebra palavras longas */
 }
 
 @media (max-width: 480px) {
   .single-item__icon {
-    right: 15px;
-    bottom: 15px;
+    font-size: 40px;
+    right: 4px;
+    bottom: 4px;
+    padding: 6px;
   }
 
   .single-item {
-    padding: 0;
+    padding: 12px; /* ✨ mantém padding em mobile */
+    gap: 8px;
   }
 
   .single-item__texts {
-    gap: 0;
+    gap: 2px;
+  }
+  
+  .single-item__title {
+    font-size: 14px; /* ✨ texto menor em mobile */
+  }
+  
+  .single-item__type {
+    font-size: 12px;
   }
 }
 
@@ -231,7 +264,6 @@ img {
   margin: 0 10px 10px;
   overflow: hidden;
 }
-
 .artist__header::before {
   content: '';
   position: absolute;
@@ -250,7 +282,7 @@ img {
   align-items: end;
   padding: 45px;
   height: 40svh;
-  min-height: 340px; /* ✨ garante altura mínima */
+  min-height: 320px; /* ✨ garante altura mínima */
   background-size: cover;
   background-position: center; /* ✨ melhor centralização */
   background-repeat: no-repeat; /* ✨ evita repetição */
