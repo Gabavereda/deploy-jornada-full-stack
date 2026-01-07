@@ -8,7 +8,7 @@ const Main = ({ type, artists = [], songs = [] }) => {
         <>
           <ItemList
             title="Artistas"
-            items={20}
+            items={5}
             itemsArray={artists}  /* Usando artistas da API */
             path="/artists"
             idPath="/artist"
@@ -17,7 +17,7 @@ const Main = ({ type, artists = [], songs = [] }) => {
 
           <ItemList
             title="Músicas"
-            items={20}
+            items={5}
             itemsArray={songs}  /* Usando músicas da API */
             path="/songs"
             idPath="/song"

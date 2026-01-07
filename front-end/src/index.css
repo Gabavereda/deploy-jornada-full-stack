@@ -141,7 +141,7 @@ img {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
   border-radius: var(--border-radius-l);
   align-items: center;
   cursor: pointer;
@@ -172,6 +172,7 @@ img {
 
 .single-item__div-image {
   width: 100%;
+  max-width: 200px; 
   aspect-ratio: 1 / 1;
   overflow: hidden;
   display: flex;
@@ -179,6 +180,7 @@ img {
   justify-content: center;
   border-radius: 50%;
   background-color: var(--green-900);
+  margin: 0 auto; /* ✅ ADICIONE ISSO - centraliza */
 }
 
 .single-item__div-image img {
