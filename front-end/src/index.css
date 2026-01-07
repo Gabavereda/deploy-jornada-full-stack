@@ -232,17 +232,33 @@ img {
   overflow: hidden;
 }
 
+.artist__header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+  pointer-events: none;
+}
+
 .artist__header {
-  --_shade: hsl(0deg 0% 0% / 25%);
+  --_shade: hsl(0deg 0% 0% / 50%); /* aumentei opacidade */
 
   display: flex;
   align-items: end;
-  padding: 25px;
+  padding: 45px;
   height: 40svh;
+  min-height: 340px; /* ✨ garante altura mínima */
   background-size: cover;
-  background-position-y: 20%;
-  background-image: linear-gradient(to bottom, var(--_shade), var(--_shade)),
+  background-position: center; /* ✨ melhor centralização */
+  background-repeat: no-repeat; /* ✨ evita repetição */
+  background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%), /* ✨ gradiente mais suave */
     url(https://i.scdn.co/image/ab67618600001016909a162796dbc3629a1fadeb);
+  
+  /* ✨ Bônus: transição suave se trocar a imagem */
+  transition: background-image 0.3s ease;
 }
 
 .artist__title {
@@ -323,6 +339,34 @@ img {
   transition: background-color var(--transition-function)
     var(--transition-duration);
   gap: 15px;
+}
+.song__image-container {
+  width: 600px; /* ou um valor fixo como 400px */
+  aspect-ratio: 1 / 1; /* mantém proporção quadrada */
+  overflow: hidden;
+  border-radius: 8px; /* opcional, deixa bonito */
+}
+
+.song__image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* corta a imagem mantendo proporção */
+  display: block;
+}
+
+/* Para a imagem pequena do artista */
+.song__artist-image {
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  border-radius: 80%; /* círculo, opcional */
+}
+
+.song__artist-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .song-item:hover {
