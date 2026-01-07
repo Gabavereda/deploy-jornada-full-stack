@@ -63,13 +63,20 @@ const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
     };
   }, [audioUrl]);
 
-  // Quando muda de música
+  // Quando muda de música - COM AUTO-PLAY ADICIONADO
   useEffect(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !audioUrl) return;
+    
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setCurrentTime(0);
     setIsPlaying(false);
+    
+    // AUTO-PLAY ao trocar de música
+    audioRef.current.load();
+    audioRef.current.play()
+      .then(() => setIsPlaying(true))
+      .catch(err => console.error("Auto-play bloqueado:", err));
   }, [audioUrl]);
 
   const progress = duration ? (currentTime / duration) * 100 : 0;
