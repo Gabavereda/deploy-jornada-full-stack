@@ -13,6 +13,7 @@ const Artist = () => {
   const [artistName, setArtistName] = useState("");
   const [artistBio, setArtistBio] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showFullBio, setShowFullBio] = useState(false); // ✅ Estado para controlar "Ver mais"
 
   useEffect(() => {
     async function loadArtistSongs() {
@@ -22,7 +23,6 @@ const Artist = () => {
           getArtists(),
         ]);
 
-        // Busca o artista pelo ID da URL
         const currentArtist = allArtists.find(a => a._id === id);
 
         if (!currentArtist) {
@@ -34,7 +34,6 @@ const Artist = () => {
         setArtistName(currentArtist.name);
         setArtistBio(currentArtist.bio);
 
-        // Filtra as músicas deste artista
         const artistSongs = allSongs.filter(
           song => song.artist === currentArtist.name
         );
@@ -51,7 +50,6 @@ const Artist = () => {
 
   if (loading) return <div className="loading-container"><p>Carregando...</p></div>;
 
-  // Proteção: Se não houver músicas, mostra um aviso em vez de crashar
   if (!songs || songs.length === 0) {
     return (
       <div className="artist">
@@ -61,15 +59,20 @@ const Artist = () => {
     );
   }
 
-  // IDs para o botão de Play Aleatório
   const randomIndex = Math.floor(Math.random() * songs.length);
-  const randomIdFromArtist = songs[randomIndex]?._id; // O '?' evita o crash se for nulo
+  const randomIdFromArtist = songs[randomIndex]?._id;
 
-  // Lógica de Banner Segura (Verifica se a imagem existe)
-  const firstImage = songs[0]?.image || ""; // O '?' evita o crash se a lista estiver vazia
+  const firstImage = songs[0]?.image || "";
   const bannerImage = firstImage.startsWith("http")
     ? firstImage
     : `${API_URL}${firstImage.startsWith('/') ? firstImage : '/' + firstImage}`;
+
+  // ✅ Lógica de truncar bio
+  const bioMaxLength = 300; // caracteres
+  const shouldTruncate = artistBio && artistBio.length > bioMaxLength;
+  const displayBio = shouldTruncate && !showFullBio 
+    ? artistBio.slice(0, bioMaxLength) + "..." 
+    : artistBio;
 
   return (
     <div className="artist">
@@ -87,20 +90,40 @@ const Artist = () => {
         <SongList songsArray={songs} />
       </div>
 
-      <div className="artist__body">
-        <h2>Sobre o Artista</h2>
-        <p> {artistBio} </p>
-        {/* ... restante do texto */}
-
-        {/* to do  */}
-        <div className=".artist-loja__body">
-          <h2>Loja</h2>
-          <p>Aqui  vai Loja</p>
-          {/* ... restante do texto */}
+      {/* ✅ Seção "Sobre o Artista" com botão Ver mais */}
+      {artistBio && (
+        <div className="artist__body">
+          <h2>Sobre o Artista</h2>
+          <p style={{ lineHeight: "1.6", marginBottom: "10px" }}>
+            {displayBio}
+          </p>
+          
+          {shouldTruncate && (
+            <button
+              onClick={() => setShowFullBio(!showFullBio)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--green-400)",
+                cursor: "pointer",
+                fontWeight: "700",
+                fontSize: "14px",
+                padding: "0",
+                textDecoration: "underline"
+              }}
+            >
+              {showFullBio ? "Ver menos" : "Ver mais"}
+            </button>
+          )}
         </div>
+      )}
+
+      {/* Loja */}
+      <div className="artist-loja__body">
+        <h2>Loja</h2>
+        <p>Aqui vai Loja</p>
       </div>
 
-      {/* Só renderiza o Link se houver um ID válido */}
       {randomIdFromArtist && (
         <Link to={`/song/${randomIdFromArtist}`}>
           <FontAwesomeIcon
