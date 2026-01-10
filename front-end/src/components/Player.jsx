@@ -63,19 +63,38 @@ const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
     };
   }, [audioUrl]);
 
+
+  const incrementPlayCount = async (songId) => {
+    try {
+      await fetch(`${API_URL}/api/songs/${songId}/play`, {
+        method: "POST",
+      });
+
+    } catch (error) {
+      console.error("Erro ao incrementar o player", error);
+    }
+  };
+
+
   // Quando muda de música - COM AUTO-PLAY ADICIONADO
   useEffect(() => {
     if (!audioRef.current || !audioUrl) return;
-    
+
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setCurrentTime(0);
     setIsPlaying(false);
-    
+
     // AUTO-PLAY ao trocar de música
     audioRef.current.load();
     audioRef.current.play()
-      .then(() => setIsPlaying(true))
+      .then(() => {
+        setIsPlaying(true);
+
+        if (songId) { // songid prop
+          incrementPlayCount(songId);
+        }
+      })
       .catch(err => console.error("Auto-play bloqueado:", err));
   }, [audioUrl]);
 

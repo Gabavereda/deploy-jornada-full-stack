@@ -79,6 +79,7 @@ const Song = () => {
           randomIdFromArtist={randomIdFromArtist}
           randomId2FromArtist={randomId2FromArtist}
           audio={fullAudioPath} // ENVIANDO O ÁUDIO COM A URL DO BACKEND  
+          songId={id}
         />
 
         <div>

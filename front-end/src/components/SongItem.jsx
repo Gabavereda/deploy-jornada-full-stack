@@ -24,6 +24,10 @@ const SongItem = ({ id, image, name, duration, index }) => {
           />
           <p className="song-item__name"
           >{name || "Música sem nome"}</p>
+
+          <p style={{ fontSize: "12px", color: "#b3b3b3" }}>
+            {song.plays?.toLocaleString() || 0} reproduções
+          </p>
         </div>
       </div>
 
