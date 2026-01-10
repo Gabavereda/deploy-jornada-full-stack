@@ -9,7 +9,7 @@ const songSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    plays: { type: Number, default: 0 }, // ✅ ADICIONE ISSO
+    plays: { type: Number, default: 0 }, // count
 }, { timestamps: true });
 
 
