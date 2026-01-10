@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Player from "../components/Player";
-import { getSongs } from "/api/api.js"; // Certifique-se que este caminho está correto
+import { getSongs } from "/api/api.js"; 
 
 const Song = () => {
   const { id } = useParams();
@@ -43,11 +43,11 @@ const Song = () => {
 
   const { image, name, duration, artist, audio } = songObj;
 
-  // 2️⃣ Formatar URLs de imagem e áudio (evitando duplicação de barras)
+  // 2️ Formatar URLs de imagem e áudio (evitando duplicação de barras)
   const fullImagePath = image.startsWith('http') ? image : `${urlBackend}${image}`;
   const fullAudioPath = audio.startsWith('http') ? audio : `${urlBackend}${audio}`;
 
-  // 3️⃣ IDs aleatórios para o Player
+  // 3️ IDs aleatórios para o Player
   const randomIndex1 = Math.floor(Math.random() * songsFromArtist.length);
   const randomIndex2 = Math.floor(Math.random() * songsFromArtist.length);
 
@@ -58,13 +58,13 @@ const Song = () => {
     <div className="song">
       <div className="song__container">
         <div className="song__image-container">
-          {/* USANDO A URL COMPLETA */}
+       
           <img src={fullImagePath} alt={`Imagem da música ${name}`} />
         </div>
       </div>
 
       <div className="song__bar">
-        {/* Removi a verificação de artistObj que não existia ou use a imagem da música */}
+       
         <div className="song__artist-image">
           <img
             width={75}

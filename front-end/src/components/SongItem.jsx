@@ -1,15 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom"; // IMPORTANTE: Sem isso a página crasha
+import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
-const SongItem = ({ id, image, name, duration, index }) => {
-  // ESCUDO: Se image for undefined, o ?. impede o crash
+const SongItem = ({ id, image, name, duration, index, plays }) => { 
   const imageUrl = image?.startsWith("http")
     ? image
     : `${API_URL}${image?.startsWith('/') ? image : '/' + (image || "")}`;
 
-  // Se não houver ID, não renderiza para não quebrar o Link abaixo
   if (!id) return null;
 
   return (
@@ -18,16 +16,18 @@ const SongItem = ({ id, image, name, duration, index }) => {
         <p>{index + 1}</p>
 
         <div className="song-item__album">
-          <img src={imageUrl}
+          <img 
+            src={imageUrl}
             alt={name || "Música"}
             className="song-item__image"
           />
-          <p className="song-item__name"
-          >{name || "Música sem nome"}</p>
-
-          <p style={{ fontSize: "12px", color: "#b3b3b3" }}>
-            {song.plays?.toLocaleString() || 0} reproduções
-          </p>
+          <div>
+            <p className="song-item__name">{name || "Música sem nome"}</p>
+            
+            <p style={{ fontSize: "12px", color: "#b3b3b3" }}>
+              {plays?.toLocaleString() || 0} reproduções
+            </p>
+          </div>
         </div>
       </div>
 

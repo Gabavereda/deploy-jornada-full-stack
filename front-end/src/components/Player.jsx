@@ -15,8 +15,7 @@ const formatTime = (seconds = 0) => {
   const s = Math.floor(seconds % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
 };
-
-const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
+const Player = ({ randomIdFromArtist, randomId2FromArtist, audio, songId }) => { // ✅ ADICIONEI songId
   const audioRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -63,20 +62,17 @@ const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
     };
   }, [audioUrl]);
 
-
   const incrementPlayCount = async (songId) => {
     try {
       await fetch(`${API_URL}/api/songs/${songId}/play`, {
         method: "POST",
       });
-
     } catch (error) {
       console.error("Erro ao incrementar o player", error);
     }
   };
 
-
-  // Quando muda de música - COM AUTO-PLAY ADICIONADO
+  // Quando muda de música - COM AUTO-PLAY
   useEffect(() => {
     if (!audioRef.current || !audioUrl) return;
 
@@ -90,13 +86,12 @@ const Player = ({ randomIdFromArtist, randomId2FromArtist, audio }) => {
     audioRef.current.play()
       .then(() => {
         setIsPlaying(true);
-
-        if (songId) { // songid prop
+        if (songId) {
           incrementPlayCount(songId);
         }
       })
       .catch(err => console.error("Auto-play bloqueado:", err));
-  }, [audioUrl]);
+  }, [audioUrl, songId]); // ✅ ADICIONEI songId nas dependências
 
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
