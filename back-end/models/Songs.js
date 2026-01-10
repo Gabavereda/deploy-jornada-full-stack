@@ -8,7 +8,9 @@ const songSchema = new mongoose.Schema({
     audio: {
         type: String,
         required: true
-    }
-});
+    },
+    plays: { type: Number, default: 0 }, // ✅ ADICIONE ISSO
+}, { timestamps: true });
+
 
 export default mongoose.model("Songs", songSchema);
