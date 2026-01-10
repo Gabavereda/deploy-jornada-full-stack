@@ -17,6 +17,7 @@ const SongList = ({ songsArray }) => {
             name={song.name}
             image={song.image}
             duration={song.duration}
+            plays={song.plays}
           />
         ))}
 
